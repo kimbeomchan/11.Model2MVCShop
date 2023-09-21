@@ -144,7 +144,7 @@
 		var win = $(window);
 		$(window).scroll(function() {
 			
-		    if($(window).scrollTop() >= $(document).height() - $(window).height()) {
+		    if($(window).scrollTop() == $(document).height() - $(window).height()) {
 		    	$.ajax({
 		    		url: '/product/json/listProduct',
 		    		type: 'POST',
@@ -170,18 +170,20 @@
 		    	            	"<td align='center' height='100'>" + ++countNo + "</td>" +
 		    	            	"<td></td>" +
 		    	            	"<td align='left' data-prodno='" + product.prodNo + "'>" + product.prodName + "</td>" +
+								"<td></td>" +
+								"<td align='left'>" + product.prodCount + " 개</td>" +
 		    	            	"<td></td>" +
-		    	            	"<td align='left'>" + product.price+ " 원</td>" +
+		    	            	"<td align='left'>" + product.price + " 원</td>" +
 		    	            	"<td></td>" +
-		    	            	"<td align='left'>" + product.regDate+ "</td>" +
+		    	            	"<td align='left'>" + product.regDate + "</td>" +
 		    	            	"<td></td>" +
 		    	            	"<td align='left'>" +
-		    	            		(menu == 'manage' ? 
-		    	                        (product.proTranCode.trim() == null ? '판매중' :
-		    	                          (product.proTranCode.trim() == '1' ? '구매완료' :
-		    	                            (product.proTranCode.trim() == '2' ? '배송중' :
-		    	                              (product.proTranCode.trim() == '3' ? '배송완료' : '')))) : '') +
-		    	                (menu == "search" ? (product.proTranCode.trim() == null ? "판매중" : "판매완료") : '') +
+		    	            		(menu == 'manage' ?
+		    	                        (product.proTranCode == null ? '판매중' :
+		    	                          (product.proTranCode == '1' ? '구매완료' :
+		    	                            (product.proTranCode == '2' ? '배송중' :
+		    	                              (product.proTranCode == '3' ? '배송완료' : '')))) : '') +
+		    	                (menu == "search" ? (product.prodCount == 0 ? "품 절" : "판매중") : '') +
 		    	                "</td></tr>" +
 		    	                "<tr>" +
 		    	        		"<td id=" +  product.prodNo + " colspan='11' bgcolor='D6D7D6' height='5'></td>" +
@@ -289,6 +291,8 @@
 			<h7>(상품 :: 상세정보)</h7>
 		</td>
 		<td class="ct_line02"></td>
+		<td class="ct_list_b" width="100">물량</td>
+		<td class="ct_line02"></td>
 		<td class="ct_list_b" width="500">가격</td>
 		<td class="ct_line02"></td>
 		<td class="ct_list_b">등록일</td>	
@@ -307,14 +311,17 @@
 		<td></td>
 		<td align="left" data-prodno="${vo.prodNo}"> ${vo.prodName}</td>
 		<td></td>
+		<td align="left">${vo.prodCount} 개</td>
+		<td></td>
 		<td align="left">${vo.price} 원</td>
 		<td></td>
 		<td align="left">${vo.regDate}</td>
 		<td></td>
+		${ vo.proTranCode }
+		${ menu }
 		<td align="left">
-		
-			<c:if test="${menu.equals('manage')}">
-				<c:if test="${vo.proTranCode == null}" >
+			<c:if test="${menu == 'manage'}">
+				<c:if test="${vo.proTranCode.trim() == null}" >
 					판매중
 				</c:if>
 				<c:if test="${vo.proTranCode.trim() == '1'}" >
@@ -328,7 +335,7 @@
 				</c:if>
 			</c:if>
 			
-			<c:if test="${menu.equals('search')}">
+			<c:if test="${menu == 'search'}">
 				${vo.proTranCode == null ? '판매중' : '판매완료'}
 			</c:if>
 		</td>	

@@ -10,7 +10,7 @@
 <title>구매 완료</title>
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
-
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="../javascript/calendar.js">
 </script>
 
@@ -20,8 +20,6 @@ function fncPurchaseProduct(){
  	var receiverName = document.detailForm.receiverName.value;
 	var receiverPhone = document.detailForm.receiverPhone.value;
 	var dlvyAddr = document.detailForm.receiverPhone.value;
-	var dlvyRequest = document.detailForm.receiverPhone.value;
-	var dlvyDate = document.detailForm.dlvyDate.value;
 
 	if(receiverName == null || receiverName.length<1){
 		alert("구매자이름은 반드시 입력하여야 합니다.");
@@ -36,15 +34,23 @@ function fncPurchaseProduct(){
 		return;
 	}
 		
-	document.detailForm.action="/purchase/addPurchase?prodNo=${purchase.purchaseProd.prodNo}";
-	document.detailForm.submit();
+	<%--document.detailForm.action="/purchase/addPurchase?prodNo=${purchase.purchaseProd.prodNo}";--%>
+	<%--document.detailForm.submit();--%>
+
+	$("form").attr("method" , "post").attr("action" , "/purchase/addPurchase").submit();
 }
+$(function () {
+	$("td.ct_btn01:contains('구매')").on("click", function() {
+		fncPurchaseProduct();
+	})
+})
+
 </script>
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
 
-<form name="detailForm" method="post">
+<form name="detailForm" >
 
 <input type="hidden" name="prodNo" value="${purchase.purchaseProd.prodNo}"/>
 
@@ -94,6 +100,17 @@ function fncPurchaseProduct(){
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">${purchase.purchaseProd.prodName}</td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
+	</tr>
+
+	<tr>
+		<td width="104" class="ct_write">
+			현재 수량 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
+		</td>
+		<td bgcolor="D6D6D6" width="1"></td>
+		<td class="ct_write01">${purchase.purchaseProd.prodCount}</td>
 	</tr>
 	<tr>
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
@@ -157,7 +174,21 @@ function fncPurchaseProduct(){
 	<tr>
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
 	</tr>
-	
+
+	<tr>
+		<td width="104" class="ct_write">
+			구매 수량 <img	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
+		</td>
+		<td bgcolor="D6D6D6" width="1"></td>
+		<td class="ct_write01">
+			<input type="text" name="purchaseQuantity" value="${!empty purchase.purchaseQuantity ? purchase.purchaseQuantity : 1 }"
+				   class="ct_input_g" style="width: 100px; height: 19px" maxLength="10" minLength="6"/>
+		</td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
+	</tr>
+
 	<tr>
 		<td width="104" class="ct_write">
 			구매방법 <img	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle">

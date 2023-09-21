@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.User;
+import org.apache.ibatis.annotations.Mapper;
 
 
 //==> 회원관리에서 CRUD 추상화/캡슐화한 DAO Interface Definition
+//@Mapper
 public interface UserDao {
 
 	// INSERT

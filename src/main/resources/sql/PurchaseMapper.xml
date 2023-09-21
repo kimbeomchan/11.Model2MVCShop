@@ -3,7 +3,7 @@
 <!DOCTYPE mapper
 		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-		
+
 <mapper namespace="PurchaseMapper" >
 
 	<resultMap id="PurchaseSelectMap" type="purchase" >
@@ -14,9 +14,10 @@
 		<result property="dlvyAddr" 		column="demailaddr" 		jdbcType="VARCHAR" />
 		<result property="dlvyRequest" 		column="dlvy_request"	 	jdbcType="VARCHAR" />
 		<result property="tranCode" 		column="tran_status_code" 	jdbcType="VARCHAR" />
-		<result property="orderDate" 		column="order_data" 		jdbcType="DATE" />
+		<result property="purchaseQuantity" column="purchase_quantity"  jdbcType="NUMERIC" />
+		<result property="orderDate" 		column="order_date" 		jdbcType="DATE" />
 		<result property="dlvyDate" 		column="dlvy_date"		 	jdbcType="DATE" />
-		
+
 		<association property="buyer" 		javaType="User" >
 			<id property="userId"			column="buyer_id"		jdbcType="VARCHAR" />
 			<result property="userName"		column="user_name" 		jdbcType="VARCHAR" />
@@ -28,109 +29,64 @@
 			<result property="email" 		column="email" 			jdbcType="VARCHAR"  />
 			<result property="regDate" 		column="reg_date" 		jdbcType="DATE" />
 		</association>
-		
+
 		<association property="purchaseProd"	javaType="Product" >
 			<id property="prodNo"			    column="prod_no"			jdbcType="NUMERIC" />
 			<result property="prodName"			column="prod_name" 			jdbcType="VARCHAR"/>
 			<result property="prodDetail" 		column="prod_detail" 		jdbcType="VARCHAR" />
 			<result property="manuDate" 		column="manufacture_day"	jdbcType="VARCHAR" />
 			<result property="price" 			column="price" 				jdbcType="NUMERIC" />
+			<result property="prodCount" 		column="prod_count" 		jdbcType="NUMERIC" />
 			<result property="fileName" 		column="image_file" 		jdbcType="VARCHAR" />
 			<result property="regDate" 			column="reg_date" 			jdbcType="DATE" />
 		</association>
-	
+
 	</resultMap>
 
 	<!-- SQL : INSERT -->
-	<insert 	id="addPurchase"		parameterType="purchase" >
-	 	INSERT 
-		INTO transaction ( tran_no , prod_no , buyer_id , payment_option , receiver_name , receiver_phone , demailaddr , dlvy_request , tran_status_code , order_data , dlvy_date ) 
-		VALUES	 (	seq_product_prod_no.nextval , #{purchaseProd.prodNo} , #{buyer.userId} , #{paymentOption} , #{receiverName} ,
-					#{receiverPhone} , #{dlvyAddr} , #{dlvyRequest} , #{tranCode} , SYSDATE , #{dlvyDate} )
+	<insert id="addPurchase" parameterType="purchase">
+		INSERT INTO transaction (prod_no, buyer_id, payment_option, receiver_name, receiver_phone, purchase_quantity, demailaddr, dlvy_request, tran_status_code, order_data, dlvy_date)
+		VALUES (#{purchaseProd.prodNo}, #{buyer.userId}, #{paymentOption}, #{receiverName},
+				#{receiverPhone}, #{purchaseQuantity}, #{dlvyAddr}, #{dlvyRequest}, #{tranCode}, NOW(), #{dlvyDate})
 	</insert>
-	
+
 	<!-- SQL : SELECT ONE -->
-	<select 	id="getPurchase"	parameterType="int"	resultMap="PurchaseSelectMap">
-		SELECT 
-		tran_no , prod_no , buyer_id , payment_option , receiver_name , receiver_phone , demailaddr , dlvy_request , tran_status_code , TO_CHAR(dlvy_date, 'YYYY-MM-DD') dlvy_date , TO_CHAR(order_data, 'YYYY-MM-DD') order_data 
-		FROM transaction  
+	<select id="getPurchase" parameterType="int" resultMap="PurchaseSelectMap">
+		SELECT
+			tran_no, prod_no, buyer_id, payment_option, receiver_name, receiver_phone, purchase_quantity, demailaddr, dlvy_request, tran_status_code, DATE_FORMAT(dlvy_date, '%Y-%m-%d') dlvy_date, DATE_FORMAT(order_data, '%Y-%m-%d') order_date
+		FROM transaction
 		WHERE tran_no = #{tranNo}
 	</select>
 
-
-	<!-- SQL : UPDATE -->
-	<update	id="updatePurchase" 	parameterType="purchase" >
-	   	UPDATE transaction  
-	   	<set>
-	   		payment_option 	= #{paymentOption} , 
-			receiver_name	= #{receiverName} , 
-			receiver_phone 	= #{receiverPhone} , 
-			demailaddr		= #{dlvyAddr} , 
-			dlvy_request	= #{dlvyRequest} , 
-			dlvy_date		= #{dlvyDate} 
-	   	</set>
-	   	WHERE tran_no = #{tranNo} 
-	</update>
-	
-	
-	<!-- SQL : UPDATE TRNACODE -->
-	<update	id="updateTranCode" 	parameterType="purchase" >
-	   	UPDATE transaction  
-	   	<set>
-	   		tran_status_code 	= #{tranCode} 
-	   	</set>
-	   	WHERE prod_no = #{purchaseProd.prodNo} 
-	</update>
-
-
 	<!-- SQL : SELECT LIST -->
-	<select  id="getPurchaseList"  parameterType="search"	resultMap="PurchaseSelectMap">
-		<!-- SELECT *
-  		FROM ( SELECT inner_table.*, ROWNUM AS row_seq
-  						FROM ( SELECT t.tran_no, p.prod_no, t.buyer_id, t.order_date, t.tran_status_code 
-										FROM transaction t, product p, users u 
-										WHERE t.prod_no = p.prod_no 
-										AND t.buyer_id = u.user_id 
-										AND u.user_id = #{buyerId}
-										ORDER BY tran_no  ) inner_table
-  						WHERE ROWNUM <![CDATA[<=]]> #{search.currentPage}*#{search.pageSize} )
-  		WHERE row_seq BETWEEN (#{search.currentPage}-1)*#{search.pageSize}+1
-  		AND #{search.currentPage}*#{search.pageSize} -->
-	  	SELECT *
-	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
-	  					FROM		(	SELECT 
-	  									p.prod_no , p.prod_name , t.buyer_id , t.receiver_name , t.receiver_phone , t.tran_status_code , t.tran_no 
-											FROM product p, transaction t  
-											WHERE t.prod_no=p.prod_no 
-											<if test="searchKeyword != null">
-												AND  buyer_id = #{searchKeyword} 
-											</if>
-											ORDER BY p.prod_no ) inner_table
-						WHERE ROWNUM &lt;= #{endRowNum} )
+	<select id="getPurchaseList" parameterType="search" resultMap="PurchaseSelectMap">
+		SELECT *
+		FROM (
+		SELECT inner_table.*, ROW_NUMBER() OVER () AS row_seq
+		FROM (
+		SELECT p.prod_no, p.prod_name, t.buyer_id, t.receiver_name, t.receiver_phone, t.purchase_quantity, t.tran_status_code, t.tran_no
+		FROM product p, transaction t
+		WHERE t.prod_no = p.prod_no
+		<if test="searchKeyword != null">
+			AND buyer_id = #{searchKeyword}
+		</if>
+		ORDER BY p.prod_no
+		) inner_table
+		) AS tmp
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-	 </select>
-	 	<!--  위 두번째 subQuery 의  
-	 			WHERE ROWNUM &lt;= #{endRowNum} ) 는
-	 			WHERE ROWNUM <= #{endRowNum} ) 의미이며..
-	 			< 는 keyword 로 &lt; 를	사용.
-	 			
-	 			<![CDATA[  ~~~  ]]> 를 이용하여 아래와 같이 사용  할 수 있다.
-	 			CDATA ==> Character Data 의 의미 Java 에서 \n 같은 특수문자 처리  
-
-				WHERE ROWNUM <![CDATA[ <=]]> #{endRowNum} )
-		-->
-	
-	
-	<!-- SQL : SELECT ROW Count -->	 
-	<select  id="getTotalCount"  parameterType="search"	 resultType="int">
-	  	SELECT COUNT(*)
-	  	FROM(	SELECT *
-						FROM transaction 
-						<if test="searchKeyword != null">
-							<where>
-								buyer_id = #{searchKeyword}
-							</where>
-						</if> ) countTable
 	</select>
+
+	<!-- SQL : SELECT ROW Count -->
+	<select id="getTotalCount" parameterType="search" resultType="int">
+		SELECT COUNT(*)
+		FROM (
+		SELECT *
+		FROM transaction
+		<if test="searchKeyword != null">
+			WHERE buyer_id = #{searchKeyword}
+		</if>
+		) AS countTable
+	</select>
+
 
 </mapper>

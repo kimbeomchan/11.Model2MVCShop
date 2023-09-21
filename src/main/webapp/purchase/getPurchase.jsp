@@ -119,6 +119,14 @@
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
 	</tr>
 	<tr>
+		<td width="104" class="ct_write">구매 수량</td>
+		<td bgcolor="D6D6D6" width="1"></td>
+		<td class="ct_write01">${purchase.purchaseQuantity}</td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
+	</tr>
+	<tr>
 		<td width="104" class="ct_write">구매요청사항</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">${purchase.dlvyRequest}</td>

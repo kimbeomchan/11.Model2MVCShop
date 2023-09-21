@@ -13,13 +13,13 @@
 	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript">
 	
-		/* function fncgetProduct(){
+		 function fncgetProduct(){
 			if(${user.role == 'admin'}){
 				$("form").attr("method" , "GET").attr("action" , "/product/listProduct?menu=manage").submit();
 			} else{
 				$("form").attr("method" , "GET").attr("action" , "/product/listProduct?menu=search").submit();
 			}
-		}; */
+		};
 		
 		function fncAddProductView(){
 			$("form").attr("method" , "GET").attr("action" , "/product/addProductView.jsp").submit();
@@ -96,6 +96,16 @@
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
 	</tr>
 
+	<tr>
+		<td width="104" class="ct_write">
+			물량 <img  src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
+		</td>
+		<td bgcolor="D6D6D6" width="1"></td>
+		<td class="ct_write01">${product.prodCount}</td>
+	</tr>
+	<tr>
+		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
+	</tr>
 	<tr>
 		<td width="104" class="ct_write">
 			제조일자<img	src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>

@@ -41,6 +41,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
 
 	public void insertPurchase(Purchase purchase) throws Exception{
+		sqlSession.update("PurchaseMapper.updateProdCount", purchase);
 		sqlSession.insert("PurchaseMapper.addPurchase", purchase);
 	}
 

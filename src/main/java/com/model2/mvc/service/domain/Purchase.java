@@ -9,9 +9,7 @@ import com.model2.mvc.service.domain.User;
 public class Purchase {
 
 	private User buyer;
-
 	private Product purchaseProd;
-
 	private String dlvyAddr;
 	private String dlvyDate;
 	private String dlvyRequest;
@@ -20,6 +18,7 @@ public class Purchase {
 	private String receiverName;
 	private String receiverPhone;
 	private String tranCode;
+	private int purchaseQuantity;
 	private int tranNo;
 
 	public Purchase(){
@@ -90,6 +89,14 @@ public class Purchase {
 	}
 	public void setTranNo(int tranNo) {
 		this.tranNo = tranNo;
+	}
+
+	public int getPurchaseQuantity() {
+		return purchaseQuantity;
+	}
+
+	public void setPurchaseQuantity(int purchaseQuantity) {
+		this.purchaseQuantity = purchaseQuantity;
 	}
 
 	@Override

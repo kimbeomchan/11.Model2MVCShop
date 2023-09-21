@@ -30,8 +30,18 @@
 			$("form").attr("method", "POST").attr("action", "/purchase/getPurchase").submit();
 		});
 	})
-	
-	
+
+	$(function () {
+		$("td:contains('배송중 상태입니다')").on("click", function() {
+			//var tranNo = $(this).data('tranno');
+
+			//$("input[name='tranNo']").val(tranNo);
+			$("form").attr("method", "POST").attr("action", "/purchase/updateTranCode?tranCode=3").submit();
+		});
+	})
+
+
+	//<a href="/purchase/updateTranCode?prodNo=${purchase.purchaseProd.prodNo}&tranCode=3">물건도착</a>
 	
 </script>
 </head>
@@ -69,6 +79,8 @@
 		<td class="ct_line02"></td>
 		<td class="ct_list_b" width="150">상품명<br><h7>(상품 Click:: 상세정보)</h7></td>
 		<td class="ct_line02"></td>
+		<td class="ct_list_b" width="50">구매 수량</td>
+		<td class="ct_line02"></td>
 		<td class="ct_list_b" width="150">회원ID</td>
 		<td class="ct_line02"></td>
 		<td class="ct_list_b" width="150">회원명</td>
@@ -98,6 +110,9 @@
 			<%-- <a href="/purchase/getPurchase?tranNo=${purchase.tranNo}"></a> --%> 
 			${purchase.purchaseProd.prodName}
 		<td/>
+
+		<td align="center">${purchase.purchaseQuantity}</td>
+		<td></td>
 		
 		<td align="center">
 			<a href="/user/getUser?userId=${user.userId}">${user.userId}</a>

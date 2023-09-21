@@ -103,7 +103,21 @@ $(function() {
 			</select>
 		</td>
 	</tr>
-	
+
+	<tr>
+		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
+	</tr>
+	<tr>
+		<td width="130" class="ct_write">
+			구매 수량 <img src="/images/ct_icon_red.gif" width="3" height="3" align="absmiddle"/>
+		</td>
+		<td bgcolor="D6D6D6" width="1"></td>
+		<td class="ct_write01">
+			<input type="text" name="purchaseQuantity" value="${purchase.purchaseQuantity}"
+				   class="ct_input_g" style="width: 100px; height: 19px" maxLength="50"/>&nbsp;
+		</td>
+	</tr>
+
 	<tr>
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
 	</tr>
