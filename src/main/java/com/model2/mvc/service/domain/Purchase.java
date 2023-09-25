@@ -1,112 +1,58 @@
 package com.model2.mvc.service.domain;
 
-import java.sql.Date;
+import lombok.*;
 
-import com.model2.mvc.service.domain.Product;
-import com.model2.mvc.service.domain.User;
+import jakarta.persistence.*;
 
+import java.util.Date;
 
+@Getter
+@Setter
+@ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity(name="transaction")
 public class Purchase {
 
-	private User buyer;
-	private Product purchaseProd;
-	private String dlvyAddr;
-	private String dlvyDate;
-	private String dlvyRequest;
-	private Date orderDate;
-	private String paymentOption;
-	private String receiverName;
-	private String receiverPhone;
-	private String tranCode;
-	private int purchaseQuantity;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "tran_no")
 	private int tranNo;
 
-	public Purchase(){
-	}
+	@ManyToOne // Purchase와 Product 간의 관계를 매핑
+	@JoinColumn(name = "prod_no") // prod_no가 외래 키
+	private Product purchaseProd;
 
-	public User getBuyer() {
-		return buyer;
-	}
-	public void setBuyer(User buyer) {
-		this.buyer = buyer;
-	}
-	public String getDlvyAddr() {
-		return dlvyAddr;
-	}
-	public void setDlvyAddr(String dlvyAddr) {
-		this.dlvyAddr = dlvyAddr;
-	}
-	public String getDlvyDate() {
-		return dlvyDate;
-	}
-	public void setDlvyDate(String dlvyDate) {
-		this.dlvyDate = dlvyDate;
-	}
-	public String getDlvyRequest() {
-		return dlvyRequest;
-	}
-	public void setDlvyRequest(String dlvyRequest) {
-		this.dlvyRequest = dlvyRequest;
-	}
-	public Date getOrderDate() {
-		return orderDate;
-	}
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
-	}
-	public String getPaymentOption() {
-		return paymentOption;
-	}
-	public void setPaymentOption(String paymentOption) {
-		this.paymentOption = paymentOption;
-	}
-	public Product getPurchaseProd() {
-		return purchaseProd;
-	}
-	public void setPurchaseProd(Product purchaseProd) {
-		this.purchaseProd = purchaseProd;
-	}
-	public String getReceiverName() {
-		return receiverName;
-	}
-	public void setReceiverName(String receiverName) {
-		this.receiverName = receiverName;
-	}
-	public String getReceiverPhone() {
-		return receiverPhone;
-	}
-	public void setReceiverPhone(String receiverPhone) {
-		this.receiverPhone = receiverPhone;
-	}
-	public String getTranCode() {
-		return tranCode;
-	}
-	public void setTranCode(String tranCode) {
-		this.tranCode = tranCode;
-	}
-	public int getTranNo() {
-		return tranNo;
-	}
-	public void setTranNo(int tranNo) {
-		this.tranNo = tranNo;
-	}
+	@ManyToOne // Purchase와 User 간의 관계를 매핑
+	@JoinColumn(name = "buyer_id") // buyer_id가 외래 키
+	private User buyer;
 
-	public int getPurchaseQuantity() {
-		return purchaseQuantity;
-	}
+	@Column(name = "dlvy_addr", nullable = false)
+	private String dlvyAddr;
 
-	public void setPurchaseQuantity(int purchaseQuantity) {
-		this.purchaseQuantity = purchaseQuantity;
-	}
+	@Column(name = "dlvy_request", nullable = false)
+	private String dlvyRequest;
 
-	@Override
-	public String toString() {
-		return "PurchaseVO [buyer=" + buyer + ", dlvyAddr=" + dlvyAddr
-				+ ", dlvyDate=" + dlvyDate + ", dlvyRequest=" + dlvyRequest
-				+ ", orderDate=" + orderDate + ", paymentOption="
-				+ paymentOption + ", purchaseProd=" + purchaseProd
-				+ ", receiverName=" + receiverName + ", receiverPhone="
-				+ receiverPhone + ", tranCode=" + tranCode + ", tranNo="
-				+ tranNo + "]";
-	}
+	@Column(name = "payment_option", nullable = false)
+	private String paymentOption;
+
+	@Column(name = "purchase_quantity", nullable = false)
+	private int purchaseQuantity;
+
+	@Column(name = "receiver_name", nullable = false)
+	private String receiverName;
+
+	@Column(name = "receiver_phone", nullable = false)
+	private String receiverPhone;
+
+	@Column(name = "tran_status_code", nullable = false)
+	private String tranCode;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "order_date", nullable = false)
+	private Date orderDate;
+
+	@Column(name = "dlvy_date", nullable = false)
+	private Date dlvyDate;
 }

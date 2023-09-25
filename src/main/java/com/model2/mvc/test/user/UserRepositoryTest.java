@@ -1,7 +1,7 @@
 package com.model2.mvc.test.user;
 
 import com.model2.mvc.service.domain.User;
-import com.model2.mvc.repo.user.UserRepository;
+import com.model2.mvc.service.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

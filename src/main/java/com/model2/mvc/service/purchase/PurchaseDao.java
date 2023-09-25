@@ -5,8 +5,10 @@ import java.util.List;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Purchase;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 //@Mapper
+@Repository
 public interface PurchaseDao {
 
 	// SELECT

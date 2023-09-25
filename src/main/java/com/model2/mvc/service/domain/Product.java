@@ -1,12 +1,12 @@
 package com.model2.mvc.service.domain;
 
+import java.util.Date;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.*;
 
 import jakarta.persistence.*;
-
-import java.util.Date;
 
 @Getter // getter 메소드 생성
 @Setter
